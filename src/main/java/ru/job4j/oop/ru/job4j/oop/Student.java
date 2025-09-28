@@ -1,9 +1,5 @@
 package ru.job4j.oop.ru.job4j.oop;
 
-import ru.job4j.oop.ru.job4j.oop.ru.job4j.oop.Jukebox;
-
-import javax.swing.text.Style;
-
 public class Student {
 
     public void music(String lyrics) {
