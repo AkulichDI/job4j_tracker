@@ -1,11 +1,13 @@
 package ru.job4j.oop.ru.job4j.oop;
 
+import ru.job4j.oop.ru.job4j.oop.ru.job4j.oop.Jukebox;
+
 import javax.swing.text.Style;
 
 public class Student {
 
-    public void music() {
-        System.out.println("Tra tra tra");
+    public void music(String lyrics) {
+        System.out.println("I can sing a song : " + lyrics);
     }
 
     public void sing(){
@@ -15,12 +17,14 @@ public class Student {
     public static void main(String[] args) {
 
         Student petya = new Student();
+        String song = "I believe, I can fly";
         petya.sing();
         petya.sing();
         petya.sing();
-        petya.music();
-        petya.music();
-        petya.music();
+        petya.music(song);
+        petya.music(song);
+        petya.music(song);
+
     }
 
 
