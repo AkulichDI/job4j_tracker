@@ -1,7 +1,7 @@
 package job4j.oop.ru.job4j.oop;
 
 
-import ru.job4j.oop.ru.job4j.homeLS16.Ball;
+import job4j.homeLS16.Ball;
 
 public class Wolf {
 

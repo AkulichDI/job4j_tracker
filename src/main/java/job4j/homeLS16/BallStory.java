@@ -1,6 +1,6 @@
 package job4j.homeLS16;
 
-import ru.job4j.oop.ru.job4j.oop.Wolf;
+
 
 public class BallStory {
 
