@@ -1,5 +1,6 @@
-package job4j.tracker;
+package ru.job4j.tracker;
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 public class Tracker {
     private final Item[] items = new Item[100];
@@ -64,6 +65,18 @@ public class Tracker {
     }
 
 
-
+    public static String text(String... strings) {
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            builder.append(string);
+        }
+        return builder.toString();
+    }
+    public static void main(String[] args) {
+        System.out.println(text());
+        System.out.println(text("aaa"));
+        System.out.println(text("aaa", "bbb", "ccc"));
+        System.out.println(text("aaa", "bbb", "ccc", "ddd", "eee"));
+    }
 
 }
