@@ -22,4 +22,6 @@ public class Bus implements Transport{
         double priceOneL = 54.3;
         return (int) (priceOneL * fuel);
     }
+
+
 }
