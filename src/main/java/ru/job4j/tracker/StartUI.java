@@ -5,7 +5,12 @@ import job4j.oop.ru.job4j.oop.Main;
 import java.util.Scanner;
 
 public class StartUI {
-
+    private void showInfoItem(Item item){
+        System.out.println("Ссылка на объект: " + item);
+        System.out.println("Заголовок: " + item.getName());
+        System.out.println("ID записи: " + item.getId());
+        System.out.println("============================");
+    }
     public void init(Scanner scanner, Tracker tracker) {
        boolean run = true;
        while (run) {
@@ -18,16 +23,15 @@ public class StartUI {
                String name = scanner.nextLine();
                Item item = new Item(name);
                tracker.add(item);
-               System.out.println("\nДобавленная заявка: " + item.getName() + "\nID записи: " + item.getId()+ "\n" );
+
+               System.out.println("Добавлена заявка");
+               showInfoItem(item);
            } else if (select == 1 ) {
                System.out.println("==== Вывод всех заявок ====");
                Item[] items = tracker.findAll();
                if (items.length>0) {
                    for (Item item : items) {
-                       System.out.println("Ссылка на объект: " + item);
-                       System.out.println("Заголовок: " + item.getName());
-                       System.out.println("ID записи: " + item.getId());
-                       System.out.println("============================");
+                       showInfoItem(item);
                    }
                }else {
                    System.out.println("Хранилище еще не содержит заявок");
@@ -43,6 +47,7 @@ public class StartUI {
                        System.out.print("Введите имя: ");
                        String name = scanner.nextLine();
                        Item item = new Item(name);
+                       showInfoItem(item);
                        tracker.replace(id, item);
                        System.out.println("Заявка изменена успешно.");
                        run2 = false;
@@ -58,6 +63,7 @@ public class StartUI {
                    int id = Integer.parseInt(scanner.nextLine());
                    if (null != tracker.findById(id)) {
                        Item item = tracker.findById(id);
+                       showInfoItem(item);
                        tracker.delete(id);
                        System.out.println(item != null ? "Заявка удалена успешно." : "Ошибка удаления заявки.");
                        run3 = false;
@@ -74,7 +80,7 @@ public class StartUI {
                     if (null != tracker.findById(id)){
                         Item item = tracker.findById(id);
                         if (item != null) {
-                            System.out.println(item);
+                            showInfoItem(item);
                         } else {
                             System.out.println("Заявка с введенным id: " + id + " не найдена.");
                         }
@@ -84,6 +90,18 @@ public class StartUI {
                     }
 
                 }
+           }else if (select == 5 ) {
+               System.out.println("=== Вывод заявок по имени ===");
+               System.out.print("Введите имя: ");
+               String name = scanner.nextLine();
+               Item[] items = tracker.findByName(name);
+               if (items.length > 0) {
+                   for (Item item : items) {
+                       showInfoItem(item);
+                   }
+               } else {
+                   System.out.println("Заявки с именем: " + name + " не найдены.");
+               }
            } else {
                run = false;
            }
@@ -91,7 +109,6 @@ public class StartUI {
 
 
     }
-
     private void showMenu() {
         String[] menu = {
                 "Добавить новую заявку", "Показать все заявки",
