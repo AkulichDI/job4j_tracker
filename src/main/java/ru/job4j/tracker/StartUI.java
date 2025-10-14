@@ -1,8 +1,5 @@
 package ru.job4j.tracker;
 
-
-
-
 public class StartUI {
     private static void showInfoItem(Item item){
         System.out.println("Ссылка на объект: " + item);
