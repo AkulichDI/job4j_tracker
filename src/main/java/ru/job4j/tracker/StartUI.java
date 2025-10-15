@@ -1,12 +1,13 @@
 package ru.job4j.tracker;
 
 public class StartUI {
-    private static void showInfoItem(Item item){
+    static void showInfoItem(Item item){
         System.out.println("Ссылка на объект: " + item);
         System.out.println("Заголовок: " + item.getName());
         System.out.println("ID записи: " + item.getId());
         System.out.println("============================");
     }
+
     public static  void  createItem(Input input, Tracker tracker){
         System.out.println("==== Создание новой заявки ====");
         String name = input.askStr("Введите наименование\n");
@@ -32,6 +33,7 @@ public class StartUI {
             }
         }
     }
+
     public static void findAllItems(Tracker tracker) {
         System.out.println("==== Вывод всех заявок ====");
         Item[] items = tracker.findAll();
@@ -136,6 +138,7 @@ public class StartUI {
 
         }
     }
+
     public static void main(String[] args) {
         Input input = new ConsoleInput();
         Tracker tracker = new Tracker();
