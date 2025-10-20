@@ -7,11 +7,11 @@ public class StartUI {
         this.output = output;
     }
 
-    static void showInfoItem(Item item) {
-        System.out.println("Ссылка на объект: " + item);
-        System.out.println("Заголовок: " + item.getName());
-        System.out.println("ID записи: " + item.getId());
-        System.out.println("============================");
+    static void showInfoItem(Output output, Item item) {
+        output.println("Ссылка на объект: " + item);
+        output.println("Заголовок: " + item.getName());
+        output.println("ID записи: " + item.getId());
+        output.println("============================");
     }
 
 

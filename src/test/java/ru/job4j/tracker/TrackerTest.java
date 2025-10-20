@@ -120,6 +120,105 @@ class StartUITest{
         );
     }
 
+    @Test
+    void whenFindAllActionDisplaysItems() {
+        Output output = new StubOutput();
+        Tracker tracker = new Tracker();
+        Item first = tracker.add(new Item("First"));
+        Item second = tracker.add(new Item("Second"));
+        Input input = new MockInput(
+                new String[] {"0", "1"}
+        );
+        UserAction[] actions = new UserAction[] {
+                new FindAllAction(output),
+                new ExitAction(output)
+        };
+        new StartUI(output).init(input, tracker, actions);
+        String ln = System.lineSeparator();
+        assertThat(output.toString()).isEqualTo(
+                "Меню:" + ln
+                        + "0. Вывод всех заявок " + ln
+                        + "1. Завершить программу" + ln
+                        + "==== Вывод всех заявок ====" + ln
+                        + "Ссылка на объект: " + first + ln
+                        + "Заголовок: " + first.getName() + ln
+                        + "ID записи: " + first.getId() + ln
+                        + "============================" + ln
+                        + "Ссылка на объект: " + second + ln
+                        + "Заголовок: " + second.getName() + ln
+                        + "ID записи: " + second.getId() + ln
+                        + "============================" + ln
+                        + "Меню:" + ln
+                        + "0. Вывод всех заявок " + ln
+                        + "1. Завершить программу" + ln
+                        + "=== Завершение программы ===" + ln
+        );
+    }
+
+    @Test
+    void whenFindByNameActionDisplaysMatchingItems() {
+        Output output = new StubOutput();
+        Tracker tracker = new Tracker();
+        Item first = tracker.add(new Item("Test"));
+        Item second = tracker.add(new Item("Test"));
+        tracker.add(new Item("Other"));
+        Input input = new MockInput(
+                new String[] {"0", first.getName(), "1"}
+        );
+        UserAction[] actions = new UserAction[] {
+                new FindByNameAction(output),
+                new ExitAction(output)
+        };
+        new StartUI(output).init(input, tracker, actions);
+        String ln = System.lineSeparator();
+        assertThat(output.toString()).isEqualTo(
+                "Меню:" + ln
+                        + "0. Вывод заявок по имени" + ln
+                        + "1. Завершить программу" + ln
+                        + "Ссылка на объект: " + first + ln
+                        + "Заголовок: " + first.getName() + ln
+                        + "ID записи: " + first.getId() + ln
+                        + "============================" + ln
+                        + "Ссылка на объект: " + second + ln
+                        + "Заголовок: " + second.getName() + ln
+                        + "ID записи: " + second.getId() + ln
+                        + "============================" + ln
+                        + "Меню:" + ln
+                        + "0. Вывод заявок по имени" + ln
+                        + "1. Завершить программу" + ln
+                        + "=== Завершение программы ===" + ln
+        );
+    }
+
+    @Test
+    void whenFindByIdActionDisplaysItem() {
+        Output output = new StubOutput();
+        Tracker tracker = new Tracker();
+        Item item = tracker.add(new Item("Test"));
+        Input input = new MockInput(
+                new String[] {"0", String.valueOf(item.getId()), "1"}
+        );
+        UserAction[] actions = new UserAction[] {
+                new FindByIdAction(output),
+                new ExitAction(output)
+        };
+        new StartUI(output).init(input, tracker, actions);
+        String ln = System.lineSeparator();
+        assertThat(output.toString()).isEqualTo(
+                "Меню:" + ln
+                        + "0. Вывод заявки по id" + ln
+                        + "1. Завершить программу" + ln
+                        + "Ссылка на объект: " + item + ln
+                        + "Заголовок: " + item.getName() + ln
+                        + "ID записи: " + item.getId() + ln
+                        + "============================" + ln
+                        + "Меню:" + ln
+                        + "0. Вывод заявки по id" + ln
+                        + "1. Завершить программу" + ln
+                        + "=== Завершение программы ===" + ln
+        );
+    }
+
 
 
 }
