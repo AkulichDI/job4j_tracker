@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import ru.job4j.tracker.action.*;
+
 public class StartUI {
     private final Output output;
 
@@ -7,7 +9,7 @@ public class StartUI {
         this.output = output;
     }
 
-    static void showInfoItem(Output output, Item item) {
+    public static void showInfoItem(Output output, Item item) {
         output.println("Ссылка на объект: " + item);
         output.println("Заголовок: " + item.getName());
         output.println("ID записи: " + item.getId());
