@@ -20,7 +20,6 @@ public class DeleteAction implements UserAction{
             int id = input.askInt("Введите id: ");
             if (null != tracker.findById(id)) {
                 Item item = tracker.findById(id);
-                showInfoItem(item);
                 tracker.delete(id);
                 output.println(item != null ? "Заявка удалена успешно." : "Ошибка удаления заявки.");
                 run3 = false;

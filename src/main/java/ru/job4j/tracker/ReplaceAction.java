@@ -10,7 +10,7 @@ public class ReplaceAction implements UserAction{
     }
     @Override
     public String name() {
-        return "Редактирование заявки";
+        return "Изменить заявку";
     }
 
     @Override
@@ -21,7 +21,6 @@ public class ReplaceAction implements UserAction{
             if (null != tracker.findById(id)) {
                 String name = input.askStr("Введите имя: ");
                 Item item = new Item(name);
-                showInfoItem(item);
                 tracker.replace(id, item);
                 output.println("Заявка изменена успешно.");
                 run2 = false;
