@@ -3,6 +3,11 @@ package ru.job4j.tracker;
 import static ru.job4j.tracker.StartUI.showInfoItem;
 
 public class FindByNameAction implements UserAction{
+    private final Output output;
+
+    public FindByNameAction (Output output) {
+        this.output = output;
+    }
     @Override
     public String name() {
         return "Вывод заявок по имени";
@@ -17,7 +22,7 @@ public class FindByNameAction implements UserAction{
                 showInfoItem(item);
             }
         } else {
-            System.out.println("Заявки с именем: " + name + " не найдены.");
+            output.println("Заявки с именем: " + name + " не найдены.");
         }
         return true;
     }

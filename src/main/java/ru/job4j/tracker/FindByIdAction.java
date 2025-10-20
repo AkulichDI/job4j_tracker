@@ -3,6 +3,15 @@ package ru.job4j.tracker;
 import static ru.job4j.tracker.StartUI.showInfoItem;
 
 public class FindByIdAction implements UserAction{
+
+    private final Output output;
+
+    public FindByIdAction (Output output) {
+        this.output = output;
+    }
+
+
+
     @Override
     public String name() {
         return "Вывод заявки по id";
@@ -18,11 +27,11 @@ public class FindByIdAction implements UserAction{
                 if (item != null) {
                     showInfoItem(item);
                 } else {
-                    System.out.println("Заявка с введенным id: " + id + " не найдена.");
+                    output.println("Заявка с введенным id: " + id + " не найдена.");
                 }
                 run4 = false;
             }else {
-                System.out.println("Запись " + id + "отсутствует");
+                output.println("Запись " + id + "отсутствует");
             }
 
         }

@@ -3,6 +3,11 @@ package ru.job4j.tracker;
 import static ru.job4j.tracker.StartUI.showInfoItem;
 
 public class ReplaceAction implements UserAction{
+    private final Output output;
+
+    public ReplaceAction (Output output) {
+        this.output = output;
+    }
     @Override
     public String name() {
         return "Редактирование заявки";
@@ -18,10 +23,10 @@ public class ReplaceAction implements UserAction{
                 Item item = new Item(name);
                 showInfoItem(item);
                 tracker.replace(id, item);
-                System.out.println("Заявка изменена успешно.");
+                output.println("Заявка изменена успешно.");
                 run2 = false;
             } else {
-                System.out.println("Запись " + id + "отсутствует");
+                output.println("Запись " + id + "отсутствует");
             }
         };
         return true;

@@ -3,6 +3,11 @@ package ru.job4j.tracker;
 import static ru.job4j.tracker.StartUI.showInfoItem;
 
 public class DeleteAction implements UserAction{
+    private final Output output;
+
+    public DeleteAction (Output output) {
+        this.output = output;
+    }
     @Override
     public String name() {
         return "Удаление заявки";
@@ -17,10 +22,10 @@ public class DeleteAction implements UserAction{
                 Item item = tracker.findById(id);
                 showInfoItem(item);
                 tracker.delete(id);
-                System.out.println(item != null ? "Заявка удалена успешно." : "Ошибка удаления заявки.");
+                output.println(item != null ? "Заявка удалена успешно." : "Ошибка удаления заявки.");
                 run3 = false;
             }else {
-                System.out.println("Запись " + id + "отсутствует");
+                output.println("Запись " + id + "отсутствует");
             }
         }
         return true;
