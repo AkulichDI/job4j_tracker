@@ -12,6 +12,10 @@ public class ValidateInput extends ConsoleInput {
         this.input = input;
     }
 
+    @Override
+    public String askStr(String question) {
+        return super.askStr(question);
+    }
 
     @Override
     public int askInt(String question) {
