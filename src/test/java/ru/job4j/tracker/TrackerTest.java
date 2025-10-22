@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.tracker.action.*;
 import ru.job4j.tracker.input.Input;
 import ru.job4j.tracker.input.MockInput;
+import ru.job4j.tracker.input.ValidateInput;
 import ru.job4j.tracker.output.Output;
 import ru.job4j.tracker.output.StubOutput;
 
@@ -82,8 +83,7 @@ class StartUITest{
     @Test
     void whenInvalidExit() {
         Output output = new StubOutput();
-        Input input = new MockInput(
-        new String[] { "11", "6"/* Пункты меню: неверный, верный. */}
+        Input input = new MockInput(new String[] { "1", "0"/* Пункты меню: неверный, верный. */}
     );
         Tracker tracker = new Tracker();
         UserAction[] actions = new UserAction[]{
@@ -94,7 +94,7 @@ class StartUITest{
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
                         + "0. Завершить программу" + ln
-                        + "Неверный ввод, вы можете выбрать: 0 .. 6" + ln
+                        + "Неверный ввод, вы можете выбрать: 0 .. 0" + ln
                         + "Меню:" + ln
                         + "0. Завершить программу" + ln
                         + "=== Завершение программы ===" + ln
@@ -250,6 +250,19 @@ class StartUITest{
 
 
 
+}
+class ValidateInputTest {
+
+    @Test
+    void whenInvalidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+        new String[] {"one", "1"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(1);
+    }
 }
 
 
