@@ -14,7 +14,7 @@ public class ValidateInput extends ConsoleInput {
 
     @Override
     public String askStr(String question) {
-        return super.askStr(question);
+        return input.askStr(question);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ValidateInput extends ConsoleInput {
         int value = - 1;
         do {
             try{
-                value = super.askInt(question);
+                value = input.askInt(question);
                 invalid = false;
 
             }catch (NumberFormatException nfe ){
@@ -31,5 +31,9 @@ public class ValidateInput extends ConsoleInput {
             }
         }while (invalid);
         return value;
+    }
+
+    public Output getOutput() {
+        return output;
     }
 }

@@ -263,6 +263,41 @@ class ValidateInputTest {
         int selected = input.askInt("Enter menu:");
         assertThat(selected).isEqualTo(1);
     }
+    @Test
+    void whenValidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] { "1"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(1);
+    }
+
+    @Test
+    void whenValidInputList() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] {"3", "4", "5"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        int selected1 = input.askInt("Enter menu:");
+        int selected2 = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(3);
+        assertThat(selected1).isEqualTo(4);
+        assertThat(selected2).isEqualTo(5);
+    }
+    @Test
+    void whenMinusValidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] {"-3"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(-3);
+       }
 }
 
 
