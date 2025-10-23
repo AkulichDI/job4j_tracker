@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.tracker.action.*;
 import ru.job4j.tracker.input.Input;
 import ru.job4j.tracker.input.MockInput;
+import ru.job4j.tracker.input.ValidateInput;
 import ru.job4j.tracker.output.Output;
 import ru.job4j.tracker.output.StubOutput;
 
@@ -79,6 +80,29 @@ class TrackerTest {
 
 }
 class StartUITest{
+    @Test
+    void whenInvalidExit() {
+        Output output = new StubOutput();
+        Input input = new MockInput(new String[] { "1", "0"/* Пункты меню: неверный, верный. */}
+    );
+        Tracker tracker = new Tracker();
+        UserAction[] actions = new UserAction[]{
+                new ExitAction(output)
+        };
+        new StartUI(output).init(input, tracker, actions);
+        String ln = System.lineSeparator();
+        assertThat(output.toString()).isEqualTo(
+                "Меню:" + ln
+                        + "0. Завершить программу" + ln
+                        + "Неверный ввод, вы можете выбрать: 0 .. 0" + ln
+                        + "Меню:" + ln
+                        + "0. Завершить программу" + ln
+                        + "=== Завершение программы ===" + ln
+        );
+    }
+
+
+
     @Test
     void whenExit() {
         Output output = new StubOutput();
@@ -226,6 +250,54 @@ class StartUITest{
 
 
 
+}
+class ValidateInputTest {
+
+    @Test
+    void whenInvalidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+        new String[] {"one", "1"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(1);
+    }
+    @Test
+    void whenValidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] { "1"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(1);
+    }
+
+    @Test
+    void whenValidInputList() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] {"3", "4", "5"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        int selected1 = input.askInt("Enter menu:");
+        int selected2 = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(3);
+        assertThat(selected1).isEqualTo(4);
+        assertThat(selected2).isEqualTo(5);
+    }
+    @Test
+    void whenMinusValidInput() {
+        Output output = new StubOutput();
+        Input in = new MockInput(
+                new String[] {"-3"}
+        );
+        ValidateInput input = new ValidateInput(output, in);
+        int selected = input.askInt("Enter menu:");
+        assertThat(selected).isEqualTo(-3);
+       }
 }
 
 
