@@ -1,12 +1,11 @@
 package ru.job4j.tracker;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringJoiner;
+import java.util.List;
 
 public class Tracker {
     //private final Item[] items = new Item[100];
     private int ids = 1;
-    ArrayList<Item> items = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
 
 
 
@@ -31,7 +30,7 @@ public class Tracker {
             return false;
         }
         item.setId(id);
-        items.add(index,item);
+        items.set(index,item);
         return true;
     }
     public boolean delete (int id){
@@ -53,21 +52,28 @@ public class Tracker {
         return index != -1 ? items.get(index) : null;
     }
 
-    public Item[] findByName(String key){
-        int counter = 0;
-        ArrayList<Item> itemsSh = new ArrayList<>();
-        for (int i = 0; i < items.size(); i++) {
-            if(items.get(i).getName().equals(key) ){
-                itemsSh.set(counter, items.get(i));
-                counter++;
+    public List<Item> findByName(String key){
+        List<Item> itemsSh = new ArrayList<>();
+
+        for (Item it : items){
+            if (it.getName().equals(key)){
+                itemsSh.add(it);
             }
         }
-
-        return Arrays.copyOf(itemsSh, counter);
+        return itemsSh;
+//
+//        for (int i = 0; i < items.size(); i++) {
+//            if(items.get(i).getName().equals(key) ){
+//                itemsSh.set(counter, items.get(i));
+//                counter++;
+//            }
+//        }
+//
+//        return Arrays.copyOf(itemsSh, counter);
     }
 
-    public Item[] findAll(){
-        return Arrays.copyOf(items, items.size());
+    public List<Item> findAll(){
+        return new ArrayList<>(items);
     }
 
 
