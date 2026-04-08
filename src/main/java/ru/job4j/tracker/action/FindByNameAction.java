@@ -1,6 +1,6 @@
 package ru.job4j.tracker.action;
 
-import ru.job4j.tracker.MemTracker;
+import ru.job4j.tracker.Store;
 import ru.job4j.tracker.input.Input;
 import ru.job4j.tracker.Item;
 import ru.job4j.tracker.output.Output;
@@ -21,9 +21,9 @@ public class FindByNameAction implements UserAction{
     }
 
     @Override
-    public boolean execute(Input input, MemTracker memTracker) {
+    public boolean execute(Input input, Store store) {
         String name = input.askStr("Введите имя: ");
-        List<Item> items = memTracker.findByName(name);
+        List<Item> items = store.findByName(name);
         if (!items.isEmpty()) {
             for (Item item : items) {
                 showInfoItem(output, item);

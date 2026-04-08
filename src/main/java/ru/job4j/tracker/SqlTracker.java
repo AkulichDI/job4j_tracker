@@ -1,189 +1,146 @@
 package ru.job4j.tracker;
 
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class SqlTracker implements Store{
-
-
+public class SqlTracker implements Store {
     private Connection connection;
 
-    public SqlTracker(){
+    public SqlTracker() {
         init();
     }
 
-    public SqlTracker(Connection connection){
-
+    public SqlTracker(Connection connection) {
         this.connection = connection;
-
     }
 
-
-
-
-    private boolean ifExists (Item item ) throws SQLException {
-
-        boolean result = false;
-
-        Statement statement = connection.createStatement();
-        try(ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM items WHERE id = %d", item.getId()))){
-
-            while ( resultSet.next()){
-                if (resultSet.getInt("id") == item.getId()){
-                    result = true;
-                }
+    private void init() {
+        try (InputStream input = SqlTracker.class.getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                throw new IllegalStateException("Resource app.properties not found");
             }
-
-        }
-
-        return result;
-    }
-
-
-    private void init(){
-
-        try(InputStream input = SqlTracker.class.getClassLoader().getResourceAsStream("app.properties")){
-
             Properties config = new Properties();
             config.load(input);
             Class.forName(config.getProperty("driver-class-name"));
-
             connection = DriverManager.getConnection(
                     config.getProperty("url"),
                     config.getProperty("username"),
                     config.getProperty("password")
             );
-
-        }catch (Exception e ){
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
-
     }
-
 
     @Override
     public Item add(Item item) {
-
-
-        try {
-            if (ifExists(item)){
-                throw new IllegalArgumentException("Item already exists");
+        String sql = "INSERT INTO items(name, created) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, item.getName());
+            statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
+            statement.executeUpdate();
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    item.setId(keys.getInt(1));
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
-
-
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO items (id, name, created) VALUES (?,?,?)")){
-            statement.setInt(1, item.getId());
-            statement.setString(2, item.getName());
-            statement.setTimestamp(3, Timestamp.valueOf(item.getCreated()));
-            statement.executeUpdate();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
         return item;
     }
 
     @Override
     public boolean replace(int id, Item item) {
-
-
-        try {
-            if (ifExists(item)){
-                throw new IllegalArgumentException("Нет такого объекта");
+        String sql = "UPDATE items SET name = ?, created = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, item.getName());
+            statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
+            statement.setInt(3, id);
+            boolean updated = statement.executeUpdate() > 0;
+            if (updated) {
+                item.setId(id);
             }
+            return updated;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
-
-        try( PreparedStatement statement = connection.prepareStatement("UPDATE items SET id = ? where id = ? ")){
-            statement.setInt(1, id);
-            statement.setInt(2, item.getId());
-         return statement.executeUpdate() > 0;
-        }catch (Exception e ){
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
     @Override
     public void delete(int id) {
-
-        try( PreparedStatement statement = connection.prepareStatement("DELETE IF EXISTS FROM items WHERE id = ?")){
+        String sql = "DELETE FROM items WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.executeUpdate();
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
         }
     }
 
     @Override
     public List<Item> findAll() {
-
         List<Item> result = new ArrayList<>();
-
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM items")){
-            try (ResultSet resultSet = statement.executeQuery()){
-
-                while (resultSet.next()){
-
-                    result.add(new Item(resultSet.getInt("id"), resultSet.getString("name")));
-
-                }
+        String sql = "SELECT id, name, created FROM items";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                result.add(parseItem(resultSet));
             }
-
-        }catch (Exception e ){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
         }
-
         return result;
     }
 
     @Override
     public List<Item> findByName(String key) {
-
         List<Item> result = new ArrayList<>();
-
-        try ( PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE name = ?")){
-            statement.setString(1,key);
-            try (ResultSet resultSet = statement.executeQuery()){
-                    while (resultSet.next()){
-
-                        result.add(new Item(resultSet.getInt("id"), resultSet.getString("name")));
-
-                    }
-
+        String sql = "SELECT id, name, created FROM items WHERE name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, key);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    result.add(parseItem(resultSet));
+                }
             }
-        }catch (Exception e ){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
         }
-
         return result;
     }
 
     @Override
     public Item findById(int id) {
-
-        try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id = ?")){
+        String sql = "SELECT id, name, created FROM items WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
-            try(ResultSet resultSet = statement.executeQuery()){
-
-                return new Item(resultSet.getInt("id"), resultSet.getString("name") );
-
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return parseItem(resultSet);
+                }
             }
-        }catch ( Exception e ){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
         }
-
-
         return null;
+    }
+
+    private Item parseItem(ResultSet resultSet) throws SQLException {
+        return new Item(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getTimestamp("created").toLocalDateTime()
+        );
     }
 
     @Override

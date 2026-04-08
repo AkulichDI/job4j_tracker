@@ -23,8 +23,10 @@ public final class SingleTracker {
     public List<Item> findByName(String name){
         return memTracker.findByName(name);
     }
-    public boolean delete (int id){
-        return memTracker.delete(id);
+    public boolean delete(int id) {
+        Item item = memTracker.findById(id);
+        memTracker.delete(id);
+        return item != null;
     }
     public Item findById (int id ){
         return memTracker.findById(id);

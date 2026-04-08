@@ -1,6 +1,6 @@
 package ru.job4j.tracker.action;
 
-import ru.job4j.tracker.MemTracker;
+import ru.job4j.tracker.Store;
 import ru.job4j.tracker.input.Input;
 import ru.job4j.tracker.Item;
 import ru.job4j.tracker.output.Output;
@@ -23,12 +23,12 @@ public class FindByIdAction implements UserAction{
     }
 
     @Override
-    public boolean execute(Input input, MemTracker memTracker) {
+    public boolean execute(Input input, Store store) {
         boolean run4 = true;
         while (run4) {
             int id = input.askInt("Введите id: ");
-            if (null != memTracker.findById(id)){
-                Item item = memTracker.findById(id);
+            if (null != store.findById(id)){
+                Item item = store.findById(id);
                 if (item != null) {
                     showInfoItem(output, item);
                 } else {
@@ -36,7 +36,7 @@ public class FindByIdAction implements UserAction{
                 }
                 run4 = false;
             }else {
-                output.println("Запись " + id + "отсутствует");
+                output.println("Запись  " + id + "отсутствует");
             }
 
         }

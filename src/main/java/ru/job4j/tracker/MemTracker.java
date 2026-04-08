@@ -1,19 +1,19 @@
 package ru.job4j.tracker;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemTracker {
-    //private final Item[] items = new Item[100];
+public class MemTracker implements Store {
     private int ids = 1;
     private final List<Item> items = new ArrayList<>();
 
-
-
+    @Override
     public Item add(Item item) {
         item.setId(ids++);
         items.add(item);
         return item;
     }
+
     private int indexOf(int id) {
         int result = -1;
         for (int index = 0; index < items.size(); index++) {
@@ -24,71 +24,50 @@ public class MemTracker {
         }
         return result;
     }
+
+    @Override
     public boolean replace(int id, Item item) {
         int index = indexOf(id);
         if (index == -1) {
             return false;
         }
         item.setId(id);
-        items.set(index,item);
-        return true;
-    }
-    public boolean delete (int id){
-        int index = indexOf(id);
-        if (index == -1) {
-            return false;
-        }
-        items.remove(index);
-//        System.arraycopy(items, index + 1, items, index, items.size() - index - 1);
-//        items[size - 1] = null;
-//        size--;
+        items.set(index, item);
         return true;
     }
 
-    public Item findById(int id) {
-        /* Находим индекс */
+    @Override
+    public void delete(int id) {
         int index = indexOf(id);
-        /* Если индекс найден возвращаем item, иначе null */
+        if (index != -1) {
+            items.remove(index);
+        }
+    }
+
+    @Override
+    public Item findById(int id) {
+        int index = indexOf(id);
         return index != -1 ? items.get(index) : null;
     }
 
-    public List<Item> findByName(String key){
-        List<Item> itemsSh = new ArrayList<>();
-
-        for (Item it : items){
-            if (it.getName().equals(key)){
-                itemsSh.add(it);
+    @Override
+    public List<Item> findByName(String key) {
+        List<Item> result = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getName().equals(key)) {
+                result.add(item);
             }
         }
-        return itemsSh;
-//
-//        for (int i = 0; i < items.size(); i++) {
-//            if(items.get(i).getName().equals(key) ){
-//                itemsSh.set(counter, items.get(i));
-//                counter++;
-//            }
-//        }
-//
-//        return Arrays.copyOf(itemsSh, counter);
+        return result;
     }
 
-    public List<Item> findAll(){
+    @Override
+    public List<Item> findAll() {
         return new ArrayList<>(items);
     }
 
-
-    public static String text(String... strings) {
-        StringBuilder builder = new StringBuilder();
-        for (String string : strings) {
-            builder.append(string);
-        }
-        return builder.toString();
+    @Override
+    public void close() {
+        // no resources
     }
-    public static void main(String[] args) {
-        System.out.println(text());
-        System.out.println(text("aaa"));
-        System.out.println(text("aaa", "bbb", "ccc"));
-        System.out.println(text("aaa", "bbb", "ccc", "ddd", "eee"));
-    }
-
 }
