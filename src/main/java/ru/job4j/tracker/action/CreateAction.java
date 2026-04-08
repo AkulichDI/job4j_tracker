@@ -1,10 +1,10 @@
 package ru.job4j.tracker.action;
 
 
+import ru.job4j.tracker.MemTracker;
 import ru.job4j.tracker.input.Input;
 import ru.job4j.tracker.Item;
 import ru.job4j.tracker.output.Output;
-import ru.job4j.tracker.Tracker;
 
 public class CreateAction implements UserAction {
     private final Output output;
@@ -19,11 +19,11 @@ public class CreateAction implements UserAction {
    }
 
     @Override
-    public boolean execute(Input input, Tracker tracker) {
+    public boolean execute(Input input, MemTracker memTracker) {
         output.println("==== Создание новой заявки ====");
         String name = input.askStr("Введите наименование\n");
         Item item = new Item(name);
-        tracker.add(item);
+        memTracker.add(item);
         output.println("Добавлена заявка");
        return true;
     }

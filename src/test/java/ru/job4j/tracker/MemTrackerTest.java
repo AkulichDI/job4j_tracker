@@ -14,70 +14,70 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class TrackerTest {
+class MemTrackerTest {
     @Test
     public void whenTestFindById() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item bug = new Item("Bug");
-        Item item = tracker.add(bug);
-        Item result = tracker.findById(item.getId());
+        Item item = memTracker.add(bug);
+        Item result = memTracker.findById(item.getId());
         assertThat(result.getName()).isEqualTo(item.getName());
     }
     @Test
     public void whenTestFindAll() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item first = new Item("First");
         Item second = new Item("Second");
-        tracker.add(first);
-        tracker.add(second);
-        Item result = tracker.findAll().get(0);
+        memTracker.add(first);
+        memTracker.add(second);
+        Item result = memTracker.findAll().get(0);
         assertThat(result.getName()).isEqualTo(first.getName());
     }
     @Test
     public void whenTestFindByNameCheckArrayLength() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item first = new Item("First");
         Item second = new Item("Second");
-        tracker.add(first);
-        tracker.add(second);
-        tracker.add(new Item("First"));
-        tracker.add(new Item("Second"));
-        tracker.add(new Item("First"));
-        List<Item> result = tracker.findByName(first.getName());
+        memTracker.add(first);
+        memTracker.add(second);
+        memTracker.add(new Item("First"));
+        memTracker.add(new Item("Second"));
+        memTracker.add(new Item("First"));
+        List<Item> result = memTracker.findByName(first.getName());
         assertThat(result.size()).isEqualTo(3);
     }
     @Test
     public void whenTestFindByNameCheckSecondItemName() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item first = new Item("First");
         Item second = new Item("Second");
-        tracker.add(first);
-        tracker.add(second);
-        tracker.add(new Item("First"));
-        tracker.add(new Item("Second"));
-        tracker.add(new Item("First"));
-        List<Item> result = tracker.findByName(second.getName());
+        memTracker.add(first);
+        memTracker.add(second);
+        memTracker.add(new Item("First"));
+        memTracker.add(new Item("Second"));
+        memTracker.add(new Item("First"));
+        List<Item> result = memTracker.findByName(second.getName());
         assertThat(result.get(1).getName()).isEqualTo(second.getName());
     }
 
     @Test
     public void whenReplaceItemIsSuccessful() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item item = new Item("Bug");
-        tracker.add(item);
+        memTracker.add(item);
         int id = item.getId();
         Item updateItem = new Item("Bug with description");
-        tracker.replace(id, updateItem);
-        assertThat(tracker.findById(id).getName()).isEqualTo("Bug with description");
+        memTracker.replace(id, updateItem);
+        assertThat(memTracker.findById(id).getName()).isEqualTo("Bug with description");
     }
     @Test
     public void whenReplaceItemIsNotSuccessful() {
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         Item item = new Item("Bug");
-        tracker.add(item);
+        memTracker.add(item);
         Item updateItem = new Item("Bug with description");
-        boolean result = tracker.replace(1000, updateItem);
-        assertThat(tracker.findById(item.getId()).getName()).isEqualTo("Bug");
+        boolean result = memTracker.replace(1000, updateItem);
+        assertThat(memTracker.findById(item.getId()).getName()).isEqualTo("Bug");
         assertThat(result).isFalse();
     }
 
@@ -88,10 +88,10 @@ class StartUITest{
         Output output = new StubOutput();
         Input input = new MockInput(new String[] { "1", "0"/* Пункты меню: неверный, верный. */}
     );
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         List<UserAction> actions = new ArrayList<>();
         actions.add(new ExitAction(output));
-        new StartUI(output).init(input, tracker, actions);
+        new StartUI(output).init(input, memTracker, actions);
         String ln = System.lineSeparator();
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
@@ -111,7 +111,7 @@ class StartUITest{
         Input input = new MockInput(
         new String[] {"0"}
     );
-        Tracker tracker = new Tracker();
+        MemTracker memTracker = new MemTracker();
         List<UserAction> actions = new ArrayList<>();
         actions.add(new ExitAction(output));
         assertThat(output.toString()).isEqualTo(
@@ -123,8 +123,8 @@ class StartUITest{
     @Test
     void whenReplaceItemTestOutputIsSuccessfully() {
         Output output = new StubOutput();
-        Tracker tracker = new Tracker();
-        Item one = tracker.add(new Item("test1"));
+        MemTracker memTracker = new MemTracker();
+        Item one = memTracker.add(new Item("test1"));
         String replaceName = "New Test Name";
         Input input = new MockInput(
         new String[] {"0", String.valueOf(one.getId()), replaceName, "1"}
@@ -132,7 +132,7 @@ class StartUITest{
         List<UserAction> actions = new ArrayList<>();
         actions.add(new ExitAction(output));
         actions.add(new ReplaceAction(output));
-        new StartUI(output).init(input, tracker, actions);
+        new StartUI(output).init(input, memTracker, actions);
         String ln = System.lineSeparator();
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
@@ -151,16 +151,16 @@ class StartUITest{
     @Test
     void whenFindAllActionDisplaysItems() {
         Output output = new StubOutput();
-        Tracker tracker = new Tracker();
-        Item first = tracker.add(new Item("First"));
-        Item second = tracker.add(new Item("Second"));
+        MemTracker memTracker = new MemTracker();
+        Item first = memTracker.add(new Item("First"));
+        Item second = memTracker.add(new Item("Second"));
         Input input = new MockInput(
                 new String[] {"0", "1"}
         );
         List<UserAction> actions = new ArrayList<>();
         actions.add(new FindByNameAction(output));
         actions.add(new ExitAction(output));
-        new StartUI(output).init(input, tracker, actions);
+        new StartUI(output).init(input, memTracker, actions);
         String ln = System.lineSeparator();
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
@@ -185,17 +185,17 @@ class StartUITest{
     @Test
     void whenFindByNameActionDisplaysMatchingItems() {
         Output output = new StubOutput();
-        Tracker tracker = new Tracker();
-        Item first = tracker.add(new Item("Test"));
-        Item second = tracker.add(new Item("Test"));
-        tracker.add(new Item("Other"));
+        MemTracker memTracker = new MemTracker();
+        Item first = memTracker.add(new Item("Test"));
+        Item second = memTracker.add(new Item("Test"));
+        memTracker.add(new Item("Other"));
         Input input = new MockInput(
                 new String[] {"0", first.getName(), "1"}
         );
         List<UserAction> actions = new ArrayList<>();
         actions.add(new FindByNameAction(output));
         actions.add(new ExitAction(output));
-        new StartUI(output).init(input, tracker, actions);
+        new StartUI(output).init(input, memTracker, actions);
         String ln = System.lineSeparator();
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
@@ -219,15 +219,15 @@ class StartUITest{
     @Test
     void whenFindByIdActionDisplaysItem() {
         Output output = new StubOutput();
-        Tracker tracker = new Tracker();
-        Item item = tracker.add(new Item("Test"));
+        MemTracker memTracker = new MemTracker();
+        Item item = memTracker.add(new Item("Test"));
         Input input = new MockInput(
                 new String[] {"0", String.valueOf(item.getId()), "1"}
         );
         List<UserAction> actions = new ArrayList<>();
         actions.add(new FindByIdAction(output));
         actions.add(new ExitAction(output));
-        new StartUI(output).init(input, tracker, actions);
+        new StartUI(output).init(input, memTracker, actions);
         String ln = System.lineSeparator();
         assertThat(output.toString()).isEqualTo(
                 "Меню:" + ln
