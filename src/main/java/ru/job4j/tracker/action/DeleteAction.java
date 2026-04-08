@@ -13,7 +13,7 @@ public class DeleteAction implements UserAction{
     }
     @Override
     public String name() {
-        return "РЈРґР°Р»РµРЅРёРµ Р·Р°СЏРІРєРё";
+        return "Удаление записи";
     }
 
     @Override

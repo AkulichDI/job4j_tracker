@@ -27,7 +27,7 @@ public class ValidateInput extends ConsoleInput {
                 invalid = false;
 
             }catch (NumberFormatException nfe ){
-                System.out.println("Пожалуста, введите корректные данные");
+                System.out.println("Пожалуйста, введите корректные данные");
             }
         }while (invalid);
         return value;
