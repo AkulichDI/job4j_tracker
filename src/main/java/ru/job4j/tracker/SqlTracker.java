@@ -24,7 +24,7 @@ public class SqlTracker implements Store {
     }
 
     private void init() {
-        try (InputStream input = SqlTracker.class.getClassLoader().getResourceAsStream("app.properties")) {
+        try (InputStream input = SqlTracker.class.getClassLoader().getResourceAsStream("db/liquibase.properties")) {
             if (input == null) {
                 throw new IllegalStateException("Resource app.properties not found");
             }
